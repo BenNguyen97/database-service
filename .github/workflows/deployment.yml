@@ -25,7 +25,6 @@ jobs:
   deploy-database-service:
     runs-on: mock-project #ubuntu-latest #GitHub hosted - Sharing between
 
-
     steps:
         - name: Checkout Code
           uses: actions/checkout@v3
