@@ -1,4 +1,4 @@
-name: Deploy UI-Service
+name: Deploy Database-Service
 
 on: # trigger conditions
   workflow_dispatch:
@@ -22,7 +22,7 @@ on: # trigger conditions
       - master  # Trigger this workflow on push to the main branch
 
 jobs:
-  deploy-ui-service:
+  deploy-database-service:
     runs-on: mock-project #ubuntu-latest #GitHub hosted - Sharing between
 
     steps:
