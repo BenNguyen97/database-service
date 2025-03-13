@@ -10,21 +10,8 @@ spec:
   ports:
     - port: 8081
       targetPort: 8081
-  type: NodePort
+  type: ClusterIP
 ---
-
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: database-service-config
-data:
-  application.properties:
-    spring.data.mongodb.uri=mongodb://adminlocal:gpocus8gwu7b9w2pl93lit2x77vo08@10.0.1.81:27017/admin?authSource=admin&retryWrites=true&loadBalanced=false&connectTimeoutMS=10000&authMechanism=SCRAM-SHA-1
-    server.port: "8081"
-    logging.level.org.springframework.data.mongodb: "DEBUG"
-    spring.application.name=database-service
----
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -52,16 +39,26 @@ spec:
             - containerPort: 8081
               name: db-service
           volumeMounts:
-            - name: config
-              mountPath: /app/config
+            - name: config-volume  # Đổi tên cho đúng với volumes
+              mountPath: /app/config  # Mount cả thư mục
           env:
             - name: SPRING_CONFIG_LOCATION  
-              value: file:/app/config/
+              value: file:/app/config/application.properties
       volumes:
-        - name: config
+        - name: config-volume  # Đổi tên trùng với volumeMounts
           configMap:
             name: database-service-config
-             
 
-
- 
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: database-service-config
+data:
+  application.properties: |
+    spring.application.name=database-service    
+    spring.data.mongodb.uri=mongodb://adminlocal:gpocus8gwu7b9w2pl93lit2x77vo08@mongodb:27017/admin?authSource=admin&retryWrites=true&loadBalanced=false&connectTimeoutMS=10000&authMechanism=SCRAM-SHA-1
+    server.port=8081
+    logging.level.org.springframework.data.mongodb=DEBUG
+    
+    
